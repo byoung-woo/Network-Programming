@@ -1,3 +1,17 @@
 # 컴파일 무시
 *.o
 *.out
+
+# 확장자 없는 실행 파일 (예: hello_server, hello_client)
+*
+!*/
+!*.c
+!*.h
+
+hello_client
+hello_server
+
+/week2/*.out
+/week2/*.o
+
+/bin/
