@@ -1,17 +1,23 @@
-# 컴파일 무시
-*.o
-*.out
+# === 빌드 산출물 무시 ===
 
-# 확장자 없는 실행 파일 (예: hello_server, hello_client)
-*
-!*/
+# 오브젝트 파일
+*.o
+
+# 실행 파일 (확장자 없는 것들)
+a.out
+*/hello_*
+*/loop
+*/lopen
+
+# 확장자가 없는 모든 실행 파일 무시
+*/[a-zA-Z0-9]*
 !*.c
 !*.h
 
-hello_client
-hello_server
+# 텍스트/출력 파일 (실습 중 생길 수 있음)
+*.txt
+*.log
 
-/week2/*.out
-/week2/*.o
-
+# === 폴더 단위로 무시할 때 ===
 /bin/
+/build/
