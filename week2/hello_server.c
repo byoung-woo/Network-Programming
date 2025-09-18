@@ -54,4 +54,5 @@ void error_handling(char *message)
 {
     fputs(message, stderr);
     fputc('\n', stderr);
-    exi
+    exit(1);
+}
