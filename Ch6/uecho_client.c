@@ -10,41 +10,48 @@ void error_handling(char *message);
 
 int main(int argc, char *argv[])
 {
-    int serv_sock;
+    int sock;
     char message[BUF_SIZE];
     int str_len;
-    socklen_t clnt_addr_sz;
+    socklen_t addr_sz;
 
-    struct sockaddr_in serv_addr, clnt_addr;
+    struct sockaddr_in serv_adr, from_adr;
 
-    if (argc != 2)
+    if(argc!=3)
     {
-        printf("Usage: %s <port> \n", argv[0]);
+        printf("Usage: %s <IP> <port> \n", argv[0]);
         exit(1);
     }
 
-    serv_sock = socket(PF_INET, SOCK_DGRAM, 0);
-    if (serv_sock == -1)
-        error_handling("UDP socket creation error");
+    sock=socket(PF_INET, SOCK_DGRAM, 0);
+    if(sock==-1)
+        error_handling("socket() error");
 
-    memset(&serv_addr, 0, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(atoi(argv[1]));
+    memset(&serv_adr, 0, sizeof(serv_adr));
+    serv_adr.sin_family=AF_INET;
+    serv_adr.sin_addr.s_addr=inet_addr(argv[1]);
+    serv_adr.sin_port=htons(atoi(argv[2]));
 
-    if (bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
-        error_handling("bind() error");
-
-    while (1)
+    while(1)
     {
-        clnt_addr_sz = sizeof(clnt_addr);
-        str_len = recvfrom(serv_sock, message, BUF_SIZE, 0,
-                           (struct sockaddr*)&clnt_addr, &clnt_addr_sz);
-        sendto(serv_sock, message, str_len, 0,
-               (struct sockaddr*)&clnt_addr, clnt_addr_sz);
+        fputs("Insert message(q to quit): ", stdout);
+        fgets(message, sizeof(message), stdin);
+        
+        if(!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
+            break;
+
+        sendto(sock, message, strlen(message), 0,
+            (struct sockaddr*)&serv_adr, sizeof(serv_adr));
+        
+        addr_sz=sizeof(from_adr);
+        str_len=recvfrom(sock, message, BUF_SIZE, 0,
+            (struct sockaddr*)&from_adr, &addr_sz);
+
+        message[str_len]=0;
+        printf("Message from server: %s", message);
     }
 
-    close(serv_sock);
+    close(sock);
     return 0;
 }
 

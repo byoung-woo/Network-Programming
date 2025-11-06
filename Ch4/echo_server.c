@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
         else
             printf("Connected client %d \n", i+1);
 
+ 
         while((str_len = read(clnt_sock, message, BUF_SIZE)) != 0)
             write(clnt_sock, message, str_len);
 

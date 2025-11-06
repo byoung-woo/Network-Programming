@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     {
         clnt_addr_sz = sizeof(clnt_addr);
         str_len = recvfrom(serv_sock, message, BUF_SIZE, 0,
-                           (struct sockaddr*)&clnt_addr, &clnt_addr_sz);
+                             (struct sockaddr*)&clnt_addr, &clnt_addr_sz);
         sendto(serv_sock, message, str_len, 0,
                (struct sockaddr*)&clnt_addr, clnt_addr_sz);
     }
